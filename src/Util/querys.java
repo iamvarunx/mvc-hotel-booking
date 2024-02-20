@@ -5,6 +5,7 @@ public class querys {
         String Query = "SELECT\n" + //
                 "    hd.Hotel_id\n," + //
                 "rt.Room_id,\n" + //
+                "    hd.Hotel_address,\n" + //
                 "    hd.Hotel_city,\n" + //
                 "    hd.Hotel_contact,\n" + //
                 "    rt.Room_type,\n" + //
@@ -24,23 +25,4 @@ public class querys {
         return Query;
     }
 
-    public static String display_city_update_query() {
-        String Query = "SELECT\n" + //
-                "    r.Room_id,\n" + //
-                "    hd.Hotel_id\n" + //
-                "\thd.Hotel_address,\n" + //
-                "    hd.Hotel_city,\n" + //
-                "    rt.Room_type,\n" + //
-                "     r.no_of_rooms,\n" + //
-
-                "FROM\n" + //
-                "    hotel_rooms r\n" + //
-                "LEFT JOIN\n" + //
-                "    Branch_details hd ON r.Hotel_id = hd.Hotel_id\n" + //
-                "LEFT JOIN\n" + //
-                "    Room_types rt ON r.Room_id = rt.Room_id\n" + //
-                "WHERE\n" + //
-                "\thd.Hotel_city = ?;";
-        return Query;
-    }
 }

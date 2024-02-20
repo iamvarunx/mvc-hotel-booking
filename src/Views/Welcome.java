@@ -4,8 +4,7 @@ import Model.User;
 import Util.scannerCon;
 
 import java.util.*;
-import Dao.*;
-import Model.*;
+
 
 public class Welcome {
 

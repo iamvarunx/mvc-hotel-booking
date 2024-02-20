@@ -25,4 +25,35 @@ public class RoomTypesDao {
             return list;
         }
     } 
+    public static void update_room_price(int room_id, int price)  {
+
+        try {
+             dbCon db = new dbCon();
+        Connection conn = db.connect();
+        String query = "UPDATE room_types SET pricePerDay =? WHERE Room_id=?;";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setInt(1, price);
+        ps.setInt(2, room_id);
+        ps.executeUpdate();
+        System.out.println("UPDATED SUCESS FULLY");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void update_room_advprice(int room_id, int price) {
+        try {
+             dbCon db = new dbCon();
+        Connection conn = db.connect();
+        String query = "UPDATE room_types SET advanceAmount =? WHERE Room_id=?;";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setInt(1, price);
+        ps.setInt(2, room_id);
+        ps.executeUpdate();
+        System.out.println("UPDATED SUCESS FULLY");
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+       
+    }
 }

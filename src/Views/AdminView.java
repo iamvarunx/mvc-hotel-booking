@@ -1,8 +1,6 @@
 package Views;
 
 import java.util.*;
-
-import Dao.displayDao;
 import Model.Branch;
 import Model.RoomTypes;
 import Util.scannerCon;
@@ -56,22 +54,9 @@ public class AdminView {
 
     public static Branch editRoom(List<List<String>> list) {
         Scanner sc = scannerCon.connect();
-        System.out.printf(
-                "---------------------------------------------------------------------------------------------------------%n");
-        System.out.printf("|%-8s|%-8s|%-15s|%-15s|%-15s|%-12s|%-10s|%-10s|%n",
-                "Hotel_ID", "Room_ID", "Hotel_city", "Hotel_contact", "Room_type",
-                "NO_OF_ROOMS", "no_of_person",
-                "pricePerDay");
-        System.out.printf(
-                "---------------------------------------------------------------------------------------------------------%n");
-        for (int i = 0; i < list.size(); i++) {
 
-            System.out.printf("|%-8s|%-8s|%-15s|%-15s|%-15s|%-12s|%-12s|%-11s|%n",
-                    list.get(i).get(0), list.get(i).get(1), list.get(i).get(2), list.get(i).get(3), list.get(i).get(4),
-                    list.get(i).get(5), list.get(i).get(6), list.get(i).get(7));
-        }
-        System.out.printf(
-                "---------------------------------------------------------------------------------------------------------%n");
+        DisplayView.display_tabel_city(list); /* **** */
+
         System.out.print("Enter the Hotel ID: ");
         int hotelID = sc.nextInt();
         System.out.print("Enter the Room ID: ");
@@ -80,5 +65,52 @@ public class AdminView {
         int totl_rooms = sc.nextInt();
         Branch branch = new Branch(hotelID, roomID, totl_rooms);
         return branch;
+    }
+
+    public static int changepriceView() {
+        Scanner sc = scannerCon.connect();
+        System.out.println("        1.To Change per day price");
+        System.out.println("        2.To Change advance price");
+        System.out.print("Enter choice: ");
+        int chc = sc.nextInt();
+        return chc;
+    }
+
+    public static int[] changePriceView1(List<RoomTypes> roomsTypeData) {
+
+        System.out.printf(
+                "-------------------------------------------------------------------%n");
+        System.out.printf("|%-8s|%-25s|%-15s|%-14s|%n",
+                "ID", "ROOM TYPE", "PRICE", "ADVANCE");
+        System.out.printf(
+                "-------------------------------------------------------------------%n");
+        for (RoomTypes data : roomsTypeData) {
+            System.out.printf("|%-8s|%-25s|%-15s|%-14s|%n",
+                    data.id, data.type, data.pricePerDay, data.advanceAmt);
+        }
+        System.out.printf(
+                "-------------------------------------------------------------------%n");
+        Scanner sc = scannerCon.connect();
+        System.out.println("Enter the ID: ");
+        int id = sc.nextInt();
+        System.out.print("Enter the price to be changed: ");
+        int price = sc.nextInt();
+        int[] d = new int[2];
+        d[0] = id;
+        d[1] = price;
+        return d;
+    }
+
+    public static int adminDisplayView() {
+        System.out.println("What to Display");
+        System.out.println("          1.View All Branch Details ");
+        System.out.println("          2.View Hotel Details ");
+        System.out.println("          3.View All Booking Details");
+        System.out.println("          4.Exit  ");
+        Scanner sc = scannerCon.connect();
+        System.out.print("Enter Your Choice: ");
+        int c = sc.nextInt();
+        sc.nextLine();
+        return c;
     }
 }

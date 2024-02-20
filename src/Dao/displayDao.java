@@ -20,12 +20,13 @@ public class displayDao {
                     List<String> l = new ArrayList<>();
                     l.add(String.valueOf(rs.getInt(1)));
                     l.add(String.valueOf(rs.getInt( 2)));
-                    l.add(rs.getString(3));
+                    l.add(rs.getString( 3));
                     l.add(rs.getString(4));
                     l.add(rs.getString(5));
-                    l.add(String.valueOf(rs.getInt(6))); 
+                    l.add(rs.getString(6));
                     l.add(String.valueOf(rs.getInt(7))); 
-                    l.add(String.valueOf(rs.getInt(8)));
+                    l.add(String.valueOf(rs.getInt(8))); 
+                    l.add(String.valueOf(rs.getInt(9)));
                     list.add(l); 
                 }
         } catch (Exception e) {

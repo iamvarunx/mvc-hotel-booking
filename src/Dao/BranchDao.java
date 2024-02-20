@@ -4,9 +4,9 @@ import Model.Branch;
 import Util.*;
 
 import java.sql.*;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.*;
+
 
 public class BranchDao {
     public static void createNewBranch(List<Branch> branch) {
@@ -50,7 +50,7 @@ public class BranchDao {
 
     public void update_rooms(Branch b) {
         try {
-            
+
             dbCon db = new dbCon();
             Connection conn = db.connect();
             Statement stmt = conn.createStatement();
@@ -61,7 +61,7 @@ public class BranchDao {
             if (rs.next()) {
                 rooms = rs.getInt(1);
             }
-            b.setNo_of_rooms(rooms+(b.Total_rooms));
+            b.setNo_of_rooms(rooms + (b.Total_rooms));
             String query = "UPDATE hotel_rooms\r\n" + //
                     "SET no_of_rooms = ?\r\n" + //
                     "WHERE Hotel_id =? AND Room_id =?;";
@@ -74,5 +74,29 @@ public class BranchDao {
         } catch (Exception e) {
             // TODO: handle exception
         }
+    }
+
+    public static List<List<String>> display_all_branch() {
+        try {
+            List<List<String>>  list= new ArrayList<>();
+            dbCon db = new dbCon();
+            Connection conn = db.connect();
+            String query = "SELECT Hotel_id,Hotel_address, Hotel_city, Hotel_contact FROM branch_details ;";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                    List<String> l = new ArrayList<>();
+                    l.add(String.valueOf(rs.getInt(1)));
+                    l.add(rs.getString(2));
+                    l.add(rs.getString(3));
+                    l.add(rs.getString(4));
+                    
+                    list.add(l);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
