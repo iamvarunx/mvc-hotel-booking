@@ -25,7 +25,7 @@ public class AdminView {
         return choice;
     }
 
-    public static  List<Branch> addBranch(List<RoomTypes> RoomList) {
+    public static List<Branch> addBranch(List<RoomTypes> RoomList) {
 
         Scanner sc = scannerCon.connect();
         System.out.println("Hotel Address: ");
@@ -34,40 +34,51 @@ public class AdminView {
         String city = sc.nextLine();
         System.out.println("Enter Contact Number: ");
         String contact_no = sc.nextLine();
-        List<Branch> branch=new ArrayList<>();
-        for(RoomTypes list:RoomList)
-        {
+        List<Branch> branch = new ArrayList<>();
+        for (RoomTypes list : RoomList) {
             System.out.print("How many " + list.type + " rooms are there :");
             int numberOfRooms = sc.nextInt();
-            if(numberOfRooms<=0)
-            continue;
-            else{
-                branch.add(new Branch(address, city, contact_no, numberOfRooms,list.id));
+            if (numberOfRooms <= 0)
+                continue;
+            else {
+                branch.add(new Branch(address, city, contact_no, numberOfRooms, list.id));
             }
         }
         return branch;
     }
-    
-    public static String  editRoom_city(){
+
+    public static String editRoom_city() {
         Scanner sc = scannerCon.connect();
         System.out.print("Enter hotel city:");
         String city = sc.nextLine();
         return city;
     }
-    public static void editRoom(List<List<String>> list){
-       
-    for(int i=0;i<list.size();i++)
-    {
-        for(int j=0;j<list.get(i).size();j++)
-        {
-            
+
+    public static Branch editRoom(List<List<String>> list) {
+        Scanner sc = scannerCon.connect();
+        System.out.printf(
+                "---------------------------------------------------------------------------------------------------------%n");
+        System.out.printf("|%-8s|%-8s|%-15s|%-15s|%-15s|%-12s|%-10s|%-10s|%n",
+                "Hotel_ID", "Room_ID", "Hotel_city", "Hotel_contact", "Room_type",
+                "NO_OF_ROOMS", "no_of_person",
+                "pricePerDay");
+        System.out.printf(
+                "---------------------------------------------------------------------------------------------------------%n");
+        for (int i = 0; i < list.size(); i++) {
+
+            System.out.printf("|%-8s|%-8s|%-15s|%-15s|%-15s|%-12s|%-12s|%-11s|%n",
+                    list.get(i).get(0), list.get(i).get(1), list.get(i).get(2), list.get(i).get(3), list.get(i).get(4),
+                    list.get(i).get(5), list.get(i).get(6), list.get(i).get(7));
         }
-    }
-    System.out.print("Enter the Hotel ID: ");
-    int hotelID =sc.nextInt();
-    System.out.print("Enter the Room ID: ");
-    int roomID = sc.nextInt();
-    System.out.print("Enter the total number of rooms :");
-    int totl_rooms =sc.nextInt();
+        System.out.printf(
+                "---------------------------------------------------------------------------------------------------------%n");
+        System.out.print("Enter the Hotel ID: ");
+        int hotelID = sc.nextInt();
+        System.out.print("Enter the Room ID: ");
+        int roomID = sc.nextInt();
+        System.out.print("Enter the total number of rooms :");
+        int totl_rooms = sc.nextInt();
+        Branch branch = new Branch(hotelID, roomID, totl_rooms);
+        return branch;
     }
 }

@@ -25,7 +25,9 @@ public class adminController {
             String city = AdminView.editRoom_city();
             displayDao dis = new displayDao();
             List<List<String>> list=dis.display_city_query(city);
-            AdminView.editRoom(List<List<String>> list);
+            Branch b = AdminView.editRoom(list);
 
+            BranchDao bDao = new BranchDao();
+            bDao.update_rooms(b);
     }
 }
