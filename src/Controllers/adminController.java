@@ -1,9 +1,8 @@
 package Controllers;
 
 import Model.*;
-import Util.scannerCon;
-
 import java.util.*;
+import Connections.scannerCon;
 import Dao.*;
 import Views.AdminView;
 import Views.DisplayView;
@@ -19,6 +18,8 @@ public class adminController {
             changePrice();
         } else if (choice == 4) {
             adminDisplayCon();
+        } else if (choice == 5) {
+            mainController.wel();
         }
     }
 
@@ -68,8 +69,7 @@ public class adminController {
         switch (choice) {
             case 1:
                 List<List<String>> list = BranchDao.display_all_branch();
-                if(list==null)
-                {
+                if (list == null) {
                     System.out.println("Something Went Wrong!!");
                     adminController.admin();
                 }

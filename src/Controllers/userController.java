@@ -1,56 +1,54 @@
 package Controllers;
 
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.List;
-
-import Dao.BookingDao;
-import Dao.BranchDao;
-import Dao.RoomTypesDao;
-import Dao.displayDao;
-import Model.Booking;
-import Model.Branch;
-import Model.RoomTypes;
-import Model.User;
-import Views.DisplayView;
-import Views.UserView;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import Dao.*;
+import Model.*;
+import Views.*;
 
 public class userController {
-    public static void user(){
+    public static void user() {
 
         int choice = UserView.userwelcome();
-        if(choice==1)
-        {
+        if (choice == 1) {
             startBooking();
+        } else if (choice == 2) {
+            viewhotelsUserCon();
+        } else if (choice == 3) {
+            viewBookedDetailsCon();
+        } else if (choice == 4) {
+            cancelBookingCon();
+        } else if (choice == 5) {
+            viewAllBookingHistory();
+        } else if (choice == 6) {
+            mainController.wel();
         }
     }
-    public static void startBooking()
-    {
-        Booking booking= UserView.bookigDetailsView();
-       List<List<String>> list = displayDao.display_hotel_ByCity(booking.getCity());
-       DisplayView.ViewAllbranch(list);
+
+    public static void startBooking() {
+        Booking booking = UserView.bookigDetailsView();
+        List<List<String>> list = displayDao.display_hotel_ByCity(booking.getCity());
+        DisplayView.ViewAllbranch(list);
 
         int Hotel_id = DisplayView.getInt("Hotel ID");
-        LinkedHashMap<Integer,Integer> map= BookingDao.getNumberOfBookedRooms(Hotel_id,booking);
-        
-        List<Branch> roomdata = BranchDao.gettotalRooms(booking.getCity());
-        LinkedHashMap<Integer,Integer> data = new LinkedHashMap<>();
+        LinkedHashMap<Integer, Integer> map = BookingDao.getNumberOfBookedRooms(Hotel_id, booking);
 
-        for(Branch roomData:roomdata)
-        {
-            if(map.containsKey(roomData.roomID))
-            {
+        List<Branch> roomdata = BranchDao.gettotalRooms(booking.getCity());
+        LinkedHashMap<Integer, Integer> data = new LinkedHashMap<>();
+
+        for (Branch roomData : roomdata) {
+            if (map.containsKey(roomData.roomID)) {
                 int noOfRoomsBooked = map.get(roomData.roomID);
-                data.put(roomData.roomID,roomData.No_of_rooms-noOfRoomsBooked);
-            }
-            else
-            data.put(roomData.roomID,roomData.No_of_rooms);
+                data.put(roomData.roomID, roomData.No_of_rooms - noOfRoomsBooked);
+            } else
+                data.put(roomData.roomID, roomData.No_of_rooms);
         }
         List<RoomTypes> roomtype = RoomTypesDao.getRoomTypes();
-        DisplayView.roomsAvaialableToBook(roomtype,data);
+        DisplayView.roomsAvaialableToBook(roomtype, data);
         int Room_id = DisplayView.getInt("Room ID");
-        int pricePerDay = roomtype.get(Room_id-1).pricePerDay;
-        int priceAdvanceAmount = roomtype.get(Room_id-1).advanceAmt;
+        int pricePerDay = roomtype.get(Room_id - 1).pricePerDay;
+        int priceAdvanceAmount = roomtype.get(Room_id - 1).advanceAmt;
         int ROOMS_AVAILABLE = data.get(Room_id);
         int no_room = 0;
         while (true) {
@@ -62,32 +60,20 @@ public class userController {
                 break;
         }
 
-        payment_process(Room_id, no_room, booking.getNoofDays(),pricePerDay,priceAdvanceAmount);
-        
-    }
-    public static void payment_process(int room_id, int no_room, int noOfDays,int perdayprice,int advanceAmount) {
-        int total_price = perdayprice * noOfDays;
-        System.out.println("-------------------------------------------");
-        System.out.println(" PER DAY PRICE                 =     RS." + perdayprice);
-        System.out.println(" TOTAL NUMBER OF DAYS STAY     =     " + noOfDays);
-        System.out.println("                                  -------------");
-        System.out.println(" TOTAL AMOUNT                  =     RS." + total_price);
-        System.out.println("                                  -------------");
-        System.out.println(" ADVANCE AMOUNT TO BE PAID     =     RS." + advanceAmount);
-        System.out.println("-------------------------------------------");
+        payment_process(Room_id, no_room, booking.getNoofDays(), pricePerDay, priceAdvanceAmount);
 
-        System.out.println("CHOOSE THE MODE OF PAYMENT ");
-        System.out.println("1.UPI");
-        System.out.println("2.CREDIT CARD");
-        System.out.println("3.DEBIT CARD");
-        String mode = "";
-        int choice = DisplayView.getInt("your choice");
-        if (choice == 1)
-            mode = "UPI";
-        else if (choice == 2)
-            mode = "CREDIT CARD";
-        else if (choice == 3)
-            mode = "DEBIT CARD";
+        BookingDao.insert_booking(Hotel_id, Room_id, no_room, booking.checkIn.toString(),
+                booking.checkOut.toString(),
+                Payment.getPaymentID());
+
+        user();
+    }
+
+    public static void payment_process(int room_id, int no_room, int noOfDays, int perdayprice, int advanceAmount) {
+        int total_price = perdayprice * noOfDays;
+        UserView.payment_screen(perdayprice, noOfDays, total_price, advanceAmount);
+
+        String mode = UserView.payment_modeScreen();
         int amount = 0;
         while (advanceAmount != amount) {
             amount = DisplayView.getInt("YOUR Advance amount (" + advanceAmount + ")");
@@ -95,9 +81,39 @@ public class userController {
                 System.out.println("The Entered amount is wrong please..!!");
             }
         }
-        System.out.println("Enter Date Of PayMent (yyyy-mm-dd) : ");
         String date = DisplayView.getString("Date Of PayMent (yyyy-mm-dd)");
-        // in.insert_payment(getSet.getUserId(), mode, date, amount);
-        
+
+        PaymentDao payment = new PaymentDao();
+        payment.insert_payment(User.getId(), mode, date, amount);
+
+    }
+
+    public static void viewhotelsUserCon() {
+        List<List<String>> data = BranchDao.display_all_branch();
+        DisplayView.ViewAllbranch(data);
+    }
+
+    public static void viewBookedDetailsCon() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        List<List<String>> list = BookingDao.bookedDetails(dtf.format(now).toString(), User.getId());
+        UserView.viewBookedDetails(list);
+        user();
+    }
+
+    public static void viewAllBookingHistory() {
+        List<List<String>> list = BookingDao.allBookedHistory(User.getId());
+        UserView.viewAllPastBookedDetails(list);
+        user();
+    }
+
+    public static void cancelBookingCon() {
+        List<List<String>> list = BookingDao.viewToCanceldata(User.getId());
+        int booking_id = UserView.viewToCancel(list);
+        if (booking_id != 0) {
+            BookingDao.cancelBooking(booking_id);
+            System.out.println("Booking AS been canceled Successfully !!!");
+        }
+        user();
     }
 }

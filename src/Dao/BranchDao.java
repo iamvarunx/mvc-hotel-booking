@@ -1,11 +1,9 @@
 package Dao;
 
 import Model.Branch;
-import Util.*;
-
 import java.sql.*;
 import java.util.*;
-
+import Connections.*;
 
 public class BranchDao {
     public static void createNewBranch(List<Branch> branch) {
@@ -77,20 +75,20 @@ public class BranchDao {
 
     public static List<List<String>> display_all_branch() {
         try {
-            List<List<String>>  list= new ArrayList<>();
+            List<List<String>> list = new ArrayList<>();
             dbCon db = new dbCon();
             Connection conn = db.connect();
             String query = "SELECT Hotel_id,Hotel_address, Hotel_city, Hotel_contact FROM branch_details ;";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
-                    List<String> l = new ArrayList<>();
-                    l.add(String.valueOf(rs.getInt(1)));
-                    l.add(rs.getString(2));
-                    l.add(rs.getString(3));
-                    l.add(rs.getString(4));
-                    
-                    list.add(l);
+                List<String> l = new ArrayList<>();
+                l.add(String.valueOf(rs.getInt(1)));
+                l.add(rs.getString(2));
+                l.add(rs.getString(3));
+                l.add(rs.getString(4));
+
+                list.add(l);
             }
             return list;
         } catch (Exception e) {
@@ -98,37 +96,37 @@ public class BranchDao {
         }
         return null;
     }
-    public static List<Branch> gettotalRooms(String city)
-    {
+
+    public static List<Branch> gettotalRooms(String city) {
         dbCon db = new dbCon();
         List<Branch> branch = new ArrayList<>();
         try {
-             Connection conn = db.connect();
+            Connection conn = db.connect();
 
-        String query ="SELECT\n" + //
-          "rt.Room_id,\n" + //
-          "     r.no_of_rooms\n" + //
-          "FROM\n" + //
-          "    hotel_rooms r\n" + //
-          "LEFT JOIN\n" + //
-          "    Branch_details hd ON r.Hotel_id = hd.Hotel_id\n" + //
-          "LEFT JOIN\n" + //
-          "    Room_types rt ON r.Room_id = rt.Room_id\n" + //
-          "WHERE\n" + //
-          "\thd.Hotel_city = ?;";
+            String query = "SELECT\n" + //
+                    "rt.Room_id,\n" + //
+                    "     r.no_of_rooms\n" + //
+                    "FROM\n" + //
+                    "    hotel_rooms r\n" + //
+                    "LEFT JOIN\n" + //
+                    "    Branch_details hd ON r.Hotel_id = hd.Hotel_id\n" + //
+                    "LEFT JOIN\n" + //
+                    "    Room_types rt ON r.Room_id = rt.Room_id\n" + //
+                    "WHERE\n" + //
+                    "\thd.Hotel_city = ?;";
 
-          PreparedStatement ps = conn.prepareStatement(query);
-          ps.setString(1, city);
-          ResultSet rs = ps.executeQuery();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, city);
+            ResultSet rs = ps.executeQuery();
 
-          while (rs.next()) {
-            branch.add(new Branch(rs.getInt(1), rs.getInt(2)));
-          }
-          return branch;
+            while (rs.next()) {
+                branch.add(new Branch(rs.getInt(1), rs.getInt(2)));
+            }
+            return branch;
         } catch (Exception e) {
             e.printStackTrace();
         }
-       
+
         return branch;
 
     }

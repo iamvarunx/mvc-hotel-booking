@@ -1,7 +1,7 @@
 package Dao;
 
 import Model.*;
-import Util.*;
+import Connections.*;
 import java.sql.*;
 
 public class UserDao {
@@ -13,7 +13,7 @@ public class UserDao {
             ResultSet user_check = stmt.executeQuery("SELECT user_id,role FROM user_details WHERE email='"
                     + data.getEmail() + "' AND password='" + data.getPassword() + "';");
             if (user_check.next()) {
-                data.setId(user_check.getInt(1));
+                User.setId(user_check.getInt(1));
                 data.setRole(user_check.getString(2));
                 return true;
             }
@@ -52,7 +52,7 @@ public class UserDao {
             user_insert.setString(1, data.getName());
             user_insert.setString(2, data.getEmail());
             user_insert.setString(3, data.getPassword());
-            user_insert.setString(4,"user");
+            user_insert.setString(4, "user");
             user_insert.setString(5, data.getPhoneNo());
             user_insert.executeUpdate();
             return true;

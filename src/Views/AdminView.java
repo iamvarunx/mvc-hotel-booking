@@ -1,9 +1,9 @@
 package Views;
 
 import java.util.*;
+import Connections.scannerCon;
 import Model.Branch;
 import Model.RoomTypes;
-import Util.scannerCon;
 
 public class AdminView {
 

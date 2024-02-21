@@ -2,9 +2,7 @@ package Dao;
 
 import java.sql.*;
 import java.util.*;
-
-import Model.*;
-import Util.*;
+import Connections.*;
 
 public class displayDao {
   public List<List<String>> display_city_query(String city) {
@@ -55,32 +53,31 @@ public class displayDao {
 
   public static List<List<String>> display_hotel_ByCity(String city) {
     try {
-       dbCon db = new dbCon();
-    Connection conn = db.connect();
-    List<List<String>> list = new ArrayList<>();
-    String query = "SELECT\n" + //
-        "    Hotel_id\n," + //
-        "    Hotel_address,\n" + //
-        "    Hotel_city,\n" + //
-        "    Hotel_contact\n" + //
-        "FROM Branch_details " + //
-        "WHERE\n" + //
-        "\tHotel_city = ?;";
+      dbCon db = new dbCon();
+      Connection conn = db.connect();
+      List<List<String>> list = new ArrayList<>();
+      String query = "SELECT\n" + //
+          "    Hotel_id\n," + //
+          "    Hotel_address,\n" + //
+          "    Hotel_city,\n" + //
+          "    Hotel_contact\n" + //
+          "FROM Branch_details " + //
+          "WHERE\n" + //
+          "\tHotel_city = ?;";
 
-    PreparedStatement ps = conn.prepareStatement(query);
-    ps.setString(1, city);
-    ResultSet rs = ps.executeQuery();
+      PreparedStatement ps = conn.prepareStatement(query);
+      ps.setString(1, city);
+      ResultSet rs = ps.executeQuery();
 
-    while(rs.next())
-    {
+      while (rs.next()) {
         List<String> li = new ArrayList<>();
         li.add(String.valueOf(rs.getInt(1)));
         li.add(rs.getString(2));
         li.add(rs.getString(3));
         li.add(rs.getString(4));
         list.add(li);
-    }
-    return list;
+      }
+      return list;
     } catch (Exception e) {
       e.printStackTrace();
     }

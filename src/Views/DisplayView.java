@@ -3,9 +3,8 @@ package Views;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Scanner;
-
+import Connections.scannerCon;
 import Model.RoomTypes;
-import Util.scannerCon;
 
 public class DisplayView {
         public static void display_tabel_city(List<List<String>> list) {
@@ -54,10 +53,11 @@ public class DisplayView {
                 sc.nextLine();
                 return n;
         }
-        public static String getString(String s){
+
+        public static String getString(String s) {
                 Scanner sc = scannerCon.connect();
                 System.out.print("Enter " + s + ": ");
-                String a =sc.nextLine();
+                String a = sc.nextLine();
                 return a;
         }
 

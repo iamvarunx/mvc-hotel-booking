@@ -1,10 +1,8 @@
 package Views;
 
 import Model.User;
-import Util.scannerCon;
-
 import java.util.*;
-
+import Connections.scannerCon;
 
 public class Welcome {
 
