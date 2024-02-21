@@ -4,7 +4,6 @@ import Model.Branch;
 import Util.*;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.*;
 
 
@@ -98,5 +97,39 @@ public class BranchDao {
             e.printStackTrace();
         }
         return null;
+    }
+    public static List<Branch> gettotalRooms(String city)
+    {
+        dbCon db = new dbCon();
+        List<Branch> branch = new ArrayList<>();
+        try {
+             Connection conn = db.connect();
+
+        String query ="SELECT\n" + //
+          "rt.Room_id,\n" + //
+          "     r.no_of_rooms\n" + //
+          "FROM\n" + //
+          "    hotel_rooms r\n" + //
+          "LEFT JOIN\n" + //
+          "    Branch_details hd ON r.Hotel_id = hd.Hotel_id\n" + //
+          "LEFT JOIN\n" + //
+          "    Room_types rt ON r.Room_id = rt.Room_id\n" + //
+          "WHERE\n" + //
+          "\thd.Hotel_city = ?;";
+
+          PreparedStatement ps = conn.prepareStatement(query);
+          ps.setString(1, city);
+          ResultSet rs = ps.executeQuery();
+
+          while (rs.next()) {
+            branch.add(new Branch(rs.getInt(1), rs.getInt(2)));
+          }
+          return branch;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
+        return branch;
+
     }
 }

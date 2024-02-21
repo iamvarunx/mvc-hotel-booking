@@ -9,6 +9,10 @@ public class Branch {
     public int No_of_rooms;
 
     public int Total_rooms; //no_of_rooms + user_update_no_of_rooms
+    public Branch(int roomID, int no_of_rooms) {
+        this.roomID = roomID;
+        No_of_rooms = no_of_rooms;
+    }
     public Branch(int hotelid,int roomid,int total_rooms)
     {
         hotelID=hotelid;

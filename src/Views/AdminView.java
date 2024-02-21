@@ -78,18 +78,7 @@ public class AdminView {
 
     public static int[] changePriceView1(List<RoomTypes> roomsTypeData) {
 
-        System.out.printf(
-                "-------------------------------------------------------------------%n");
-        System.out.printf("|%-8s|%-25s|%-15s|%-14s|%n",
-                "ID", "ROOM TYPE", "PRICE", "ADVANCE");
-        System.out.printf(
-                "-------------------------------------------------------------------%n");
-        for (RoomTypes data : roomsTypeData) {
-            System.out.printf("|%-8s|%-25s|%-15s|%-14s|%n",
-                    data.id, data.type, data.pricePerDay, data.advanceAmt);
-        }
-        System.out.printf(
-                "-------------------------------------------------------------------%n");
+        DisplayView.roomTypeDisplay(roomsTypeData);
         Scanner sc = scannerCon.connect();
         System.out.println("Enter the ID: ");
         int id = sc.nextInt();
