@@ -84,11 +84,12 @@ public class adminController {
                 break;
             case 3:
                 System.out.println("Enter the Date to see the Booking details(yyyy-mm-dd): ");
-                // String date = sc.nextLine();
-                // dis.display_all_bookingDetails(date);
+                String date = sc.nextLine();
+                List<List<String>> list3 =BookingDao.display_all_bookingDetails(date);
+                AdminView.display_bookedDetails(list3);
                 break;
             case 4:
-                // Admin.start();
+            adminController.admin();
                 return;
             default:
                 System.out.println("Invalid choice. Please enter a valid option.");

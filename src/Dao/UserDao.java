@@ -10,11 +10,9 @@ public class UserDao {
         try {
             Connection conn = db.connect();
             Statement stmt = conn.createStatement();
-            ResultSet user_check = stmt.executeQuery("SELECT user_id,role FROM user_details WHERE email='"
-                    + data.getEmail() + "' AND password='" + data.getPassword() + "';");
+            ResultSet user_check = stmt.executeQuery("SELECT user_id FROM user_details WHERE email='"
+                    + data.getEmail() + "'; ");
             if (user_check.next()) {
-                User.setId(user_check.getInt(1));
-                data.setRole(user_check.getString(2));
                 return true;
             }
         } catch (Exception e) {
@@ -28,13 +26,14 @@ public class UserDao {
         try {
             Connection conn = db.connect();
             PreparedStatement login_input = conn
-                    .prepareStatement("Select name from user_details where email= ? AND password= ?;");
+                    .prepareStatement("Select name,user_id,role from user_details where email= ? AND password= ?;");
             login_input.setString(1, data.getEmail());
             login_input.setString(2, data.getPassword());
             ResultSet rs = login_input.executeQuery();
             if (rs.next()) {
                 data.setName(rs.getString(1));
-
+                User.setId(rs.getInt(2));
+                data.setRole(rs.getString(3));
             }
 
         } catch (Exception e) {

@@ -40,6 +40,9 @@ public class userController {
         for (Branch roomData : roomdata) {
             if (map.containsKey(roomData.roomID)) {
                 int noOfRoomsBooked = map.get(roomData.roomID);
+                if( roomData.No_of_rooms - noOfRoomsBooked<=0)
+                data.put(roomData.roomID, 0);
+                else
                 data.put(roomData.roomID, roomData.No_of_rooms - noOfRoomsBooked);
             } else
                 data.put(roomData.roomID, roomData.No_of_rooms);
@@ -47,6 +50,7 @@ public class userController {
         List<RoomTypes> roomtype = RoomTypesDao.getRoomTypes();
         DisplayView.roomsAvaialableToBook(roomtype, data);
         int Room_id = DisplayView.getInt("Room ID");
+      
         int pricePerDay = roomtype.get(Room_id - 1).pricePerDay;
         int priceAdvanceAmount = roomtype.get(Room_id - 1).advanceAmt;
         int ROOMS_AVAILABLE = data.get(Room_id);
@@ -81,7 +85,9 @@ public class userController {
                 System.out.println("The Entered amount is wrong please..!!");
             }
         }
-        String date = DisplayView.getString("Date Of PayMent (yyyy-mm-dd)");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
+        LocalDateTime now = LocalDateTime.now();   
+        String date = dtf.format(now).toString(); 
 
         PaymentDao payment = new PaymentDao();
         payment.insert_payment(User.getId(), mode, date, amount);
@@ -91,6 +97,7 @@ public class userController {
     public static void viewhotelsUserCon() {
         List<List<String>> data = BranchDao.display_all_branch();
         DisplayView.ViewAllbranch(data);
+        user();
     }
 
     public static void viewBookedDetailsCon() {

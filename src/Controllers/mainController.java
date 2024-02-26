@@ -27,7 +27,13 @@ public class mainController {
       } else if (choice == 2) {
          User data = Welcome.signupScreen();
          UserDao user = new UserDao();
-         if (user.createUser(data)) {
+         if(user.userExists(data))
+         {
+            System.out.println("User Already Exists...Please Login");
+            wel();
+         }
+         else{
+             if (user.createUser(data)) {
             System.out.print("Account as been Created...");
             System.out.println("Now Login..!");
             wel();
@@ -35,6 +41,8 @@ public class mainController {
             System.out.println("Something went Wrong try again");
             wel();
          }
+         }
+        
       }
    }
 }

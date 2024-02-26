@@ -3,6 +3,7 @@ package Dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import Connections.dbCon;
 import Model.Booking;
@@ -14,30 +15,20 @@ public class BookingDao {
     LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>(); // check_in date
     try {
       Connection conn = db.connect();
-      String query = "SELECT Room_id, SUM(no_of_rooms) \r\n" + //
-          "FROM booking_table \r\n" + //
-          "WHERE ? BETWEEN check_in AND check_out \r\n" + //
-          "    AND status='active' \r\n" + //
-          "    AND Hotel_id=? \r\n" + //
-          "GROUP BY Room_id;\r\n";
+      String query = "SELECT Room_id, SUM(no_of_rooms) FROM booking_table \n" + //
+                "WHERE ? BETWEEN check_in AND check_out OR ? BETWEEN check_in AND check_out AND \n" + //
+                "status='active' AND Hotel_id= ? \n" + //
+                "GROUP BY Room_id; \r\n";
       PreparedStatement ps1 = conn.prepareStatement(query);
       ps1.setString(1, booking.getCheckIn().toString());
-      ps1.setInt(2, hID);
+      ps1.setString(2, booking.getCheckOut().toString());
+      ps1.setInt(3, hID);
       ResultSet rs1 = ps1.executeQuery();
-
-      PreparedStatement ps2 = conn.prepareStatement(query);
-      ps2.setString(1, booking.getCheckOut().toString());
-      ps2.setInt(2, hID);
-      ResultSet rs2 = ps2.executeQuery();
-
       while (rs1.next()) {
         map.put(rs1.getInt(1), map.getOrDefault(rs1.getInt(1), 0) + rs1.getInt(2));
       }
-      System.out.println(map);
-      while (rs2.next()) {
-        map.put(rs2.getInt(1), map.getOrDefault(rs2.getInt(1), 0) + rs2.getInt(2));
-      }
-      System.out.println(map);
+     
+
     } catch (Exception e) {
       e.printStackTrace();
       return null;
@@ -189,6 +180,57 @@ public class BookingDao {
       return list;
     } catch (Exception e) {
       e.printStackTrace();
+    }
+    return list;
+  }
+
+  public static List<List<String>> display_all_bookingDetails(String date) {
+    dbCon db = new dbCon();
+    List<List<String>> list = new ArrayList<>();
+    try {
+      Connection conn = db.connect();
+      String Query = "SELECT\n" + //
+          "   ud.name,\n" + //
+          "    ud.phone_no,\n" + //
+          "    bd.Hotel_city,\n" + //
+          "    rt.Room_type,\n" + //
+          "    bt.no_of_rooms,\n" + //
+          "    bt.check_in,\n" + //
+          "    bt.check_out,\n" + //
+          "    bt.status\n" + //
+          "FROM\n" + //
+          "    booking_table bt\n" + //
+          "JOIN\n" + //
+          "    branch_details bd ON bt.Hotel_id = bd.Hotel_id\n" + //
+          "JOIN\n" + //
+          "    hotel_rooms hr ON bt.Room_id = hr.Room_id\n" + //
+          "JOIN\n" + //
+          "    room_types rt ON hr.Room_id = rt.Room_id\n" + //
+          "JOIN\n" + //
+          "    payment_table pt ON bt.payment_id = pt.payment_id\n" + //
+          "JOIN\n" + //
+          "    user_details ud ON pt.user_id = ud.user_id\n" + //
+          "WHERE bt.check_in = ? ;";
+      PreparedStatement ps = conn.prepareStatement(Query);
+      ps.setString(1, date);
+      ResultSet rs = ps.executeQuery();
+      while(rs.next())
+      {
+        List<String> li = new ArrayList<>();
+        li.add(rs.getString(1));
+        li.add(rs.getString(2));
+        li.add(rs.getString(3));
+        li.add(rs.getString(4));
+        li.add(String.valueOf(rs.getInt(5)));
+        li.add(rs.getString(6));
+        li.add(rs.getString(7));
+        li.add(rs.getString(8));
+        list.add(li);
+      }
+      return list;
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
     return list;
   }

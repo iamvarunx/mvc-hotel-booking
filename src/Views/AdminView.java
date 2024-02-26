@@ -102,4 +102,28 @@ public class AdminView {
         sc.nextLine();
         return c;
     }
+    public static void display_bookedDetails(List<List<String>> data){
+
+        if(data.size()==0)
+        {
+            System.out.println("There is No Booking Done ont this data  ...");
+            return;
+        }
+        System.out.printf(
+            "-------------------------------------------------------------------------------------------%n");
+System.out.printf("|%-15s|%-15s|%-10s|%-12s|%-11s|%-10s|%-10s|%-14s|%n",
+            "USER_NAME", "PHONE_NO", "HOTEL", "ROOM_TYPE", "NO_OF_ROOMS", "CHECK_IN", "CHECK_OUT","Status");
+System.out.printf(
+            "-------------------------------------------------------------------------------------------%n");
+            for(int i=0;i<data.size();i++)
+            {
+                
+            System.out.printf("|%-15s|%-15s|%-10s|%-12s|%-11s|%-10s|%-10s|%-14s|%n",
+                    data.get(i).get(0),data.get(i).get(1), data.get(i).get(2),data.get(i).get(3),
+                    data.get(i).get(4),
+                    data.get(i).get(5),data.get(i).get(6),data.get(i).get(7));
+                }
+                System.out.printf(
+                                "-------------------------------------------------------------------------------------------%n");
+    }
 }

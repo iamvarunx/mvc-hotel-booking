@@ -85,6 +85,7 @@ public class DisplayView {
                                 "----------------------------------------------------------------------------------------%n");
                 for (RoomTypes data : roomsTypeData) {
 
+                        if(map.get(data.id)!=0)
                         System.out.printf("|%-8s|%-25s|%-15s|%-14s|%-20s|%n",
                                         data.id, data.type, data.pricePerDay, data.advanceAmt, map.get(data.id));
                 }
